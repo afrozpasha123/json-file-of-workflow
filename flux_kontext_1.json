@@ -1,0 +1,286 @@
+{
+  "name": "flux kontext-1",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a Prompt For An Ai Inlfuencer ",
+        "options": {
+          "systemMessage": "=Give A prompt To make a Model of a girl in Bikini or laungre \nMake sure the pormpt should be realistic or you can this also use this in pormpt ultra-realistic photography, 8K detail, Canon EOS R5, Vogue editorial style, Instagram model aesthetic.\n \nImportant Rules in the pormpt must\n- add this prompt \"the photo should shoot by iphone give the skin texture \"\n- give the pose idead in the pormpt \n- ultra-realistic photo of a [person description], natural skin texture, imperfect yet expressive features, subtle asymmetry, pores and fine lines visible, natural lighting, slight facial blemishes or flyaway hairs, casual expression — shot with an iPhone 14 Pro, shallow depth of field, slight lens flare, soft HDR tone, realistic shadows and highlights, handheld composition, ambient background blur\n1- Make sure the girl waer a Bikini or a laungre\n2- for Background think of aesthetic Background like the Sea,beach,a Wall.\n3- Give the Pose Idea Also Aesthetic Pose \n4- Every Pormpt Contain Different type of Bra or A Laungre or anything that make model look More sexy.\n5- Give the expression also\n6- Sometime Give the prompt full body photo also \n7- what ever the model it should look sexy  \n8- add this also in any one of this the photo look like it was click by i phone camera,Canon EOS R5\n9- the lighting or the skin sholud not look like the ai generated  \n10- Give Only One pormpt in that there should be all things include\n11- The prompt should be max to max 200-250 words only with all the things contain \n\n\n\n*NO Other word should not contain the prompt. Give only the pormpt*\n*For One Execution Give only 1 Photo Idea*\nand at last do not add any punctuation"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        100
+      ],
+      "id": "c65f1eb5-6a81-4a23-ae36-ad1849ca75c5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -732,
+        320
+      ],
+      "id": "eb855751-906d-450f-b2d0-428b4f9e0f50",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IgeNM61Z1k2puIjC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://black-forest-labs-flux-1-kontext-dev.hf.space/gradio_api/call/infer/{{ $json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4,
+        125
+      ],
+      "id": "9085f7b5-a72a-4d0e-9807-49a1e9666581",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Step 1: Get the data field as a string\nconst raw = $json.data;\n\n// Step 2: Match the JSON part after \"data:\"\nconst match = raw.match(/data: (\\[.*?\\])\\n?/);\n\nif (!match) {\n  return [{ json: { error: \"Invalid data format\" } }];\n}\n\n// Step 3: Parse the JSON array string\nconst dataArray = JSON.parse(match[1]);\n\n// Step 4: Get the URL from the first object\nconst imageUrl = dataArray[0]?.url || null;\n\n// Step 5: Return it\nreturn [\n  {\n    json: {\n      finalUrl: imageUrl\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        436,
+        200
+      ],
+      "id": "7359b256-7661-4239-99b9-3d3f9733db40",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.finalUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        200
+      ],
+      "id": "1b75b2c0-9584-4452-bd52-43eaf3f01684",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "@hin8n",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "111"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        876,
+        200
+      ],
+      "id": "1b4549cc-27e9-498d-a04f-881be349cbba",
+      "name": "Telegram1",
+      "webhookId": "04db47b7-42a6-4bc7-8e07-3a3d0dd81d3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "@hin8n",
+        "text": "Start",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -580,
+        -180
+      ],
+      "id": "60ebfb9f-1580-4d70-9cfb-17eec1f58286",
+      "name": "Telegram",
+      "webhookId": "04db47b7-42a6-4bc7-8e07-3a3d0dd81d3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -224,
+        125
+      ],
+      "id": "912bdbf1-fda6-4ab1-add7-7a08adea32eb",
+      "name": "Wait",
+      "webhookId": "d41819dc-acd2-4ae8-a2b0-e13fea841644"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://black-forest-labs-flux-1-kontext-dev.hf.space/gradio_api/call/infer",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": [\n    {\n      \"path\": \"https://iili.io/Fgwi6mP.th.png\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    \"create a {{ $json.output.replace(/\\n/g, ' ') }}\",\n    0,\n    true,\n    2,\n    28\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -444,
+        200
+      ],
+      "id": "581f507d-cebe-4566-a85c-eec0f9ec289a",
+      "name": "Flux-kontext-original"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        200
+      ],
+      "id": "d5b6b0e4-381c-4f0a-97a4-72c6c1bd0c91",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {
+    "Flux-kontext-original": [
+      {
+        "json": {
+          "event_id": "8c67f33d9825458991936bc80f6959a2"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Flux-kontext-original",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flux-kontext-original": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0c2e7e22-1052-4a42-9aa5-03bb55be29f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ac71cf24c210117a859e357175f9e20503280b81ad0d1eee0ad55f2f1c92e44f"
+  },
+  "id": "mY7h7VeQM85UVCyK",
+  "tags": []
+}

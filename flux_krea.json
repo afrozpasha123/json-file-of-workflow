@@ -1,0 +1,168 @@
+{
+  "name": "flux krea",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a Prompt For An Ai Inlfuencer ",
+        "options": {
+          "systemMessage": "=Give A prompt To make a Model of a girl in Bikini or laungre \nMake sure the pormpt should be realistic or you can this also use this in pormpt ultra-realistic photography, 8K detail, Canon EOS R5, Vogue editorial style, Instagram model aesthetic.\n \nImportant Rules in the pormpt must\n- add this prompt \"the photo should shoot by iphone give the skin texture \"\n- give the pose idead in the pormpt \n- ultra-realistic photo of a [person description], natural skin texture, imperfect yet expressive features, subtle asymmetry, pores and fine lines visible, natural lighting, slight facial blemishes or flyaway hairs, casual expression — shot with an iPhone 14 Pro, shallow depth of field, slight lens flare, soft HDR tone, realistic shadows and highlights, handheld composition, ambient background blur\n1- Make sure the girl waer a Bikini or a laungre\n2- for Background think of aesthetic Background like the Sea,beach,a Wall.\n3- Give the Pose Idea Also Aesthetic Pose \n4- Every Pormpt Contain Different type of Bra or A Laungre or anything that make model look More sexy.\n5- Give the expression also\n6- Sometime Give the prompt full body photo also \n7- what ever the model it should look sexy  \n8- add this also in any one of this the photo look like it was click by i phone camera,Canon EOS R5\n9- the lighting or the skin sholud not look like the ai generated  \n10- Give Only One pormpt in that there should be all things include\n11- The prompt should be max to max 200-250 words only with all the things contain \n\n\n\n*NO Other word should not contain the prompt. Give only the pormpt*\n*For One Execution Give only 1 Photo Idea*"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -120,
+        -20
+      ],
+      "id": "a9ea8dc0-b4f5-4d59-a821-3e94d6766537",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -20
+      ],
+      "id": "aef7856b-2c5e-4819-b9dd-8f1ee0b6657b",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        200
+      ],
+      "id": "15e58c5b-ad6e-4e3f-b9f9-4a753e0dd089",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IgeNM61Z1k2puIjC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://black-forest-labs-flux-1-krea-dev.hf.space/gradio_api/call/infer",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"data\": [\n    \"A indian Amature girl in bikini\",\n    0,\n    true,\n    1080,\n    1920,\n    5,\n    25\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        -20
+      ],
+      "id": "302ebd25-4130-4fd2-8e0d-864a0670a83d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "=https://black-forest-labs-flux-1-krea-dev.hf.space/gradio_api/call/infer/{{ $json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        -20
+      ],
+      "id": "54a17543-a662-4d8b-9ac1-61e55d374ca0",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        460,
+        -20
+      ],
+      "id": "d448423a-0d76-4fea-a4ba-c252ad6837e8",
+      "name": "Wait",
+      "webhookId": "f2aec98c-4621-4419-9d02-16dc99943b3d"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "996d6d8f-d471-4244-a5c1-c220e3aabf11",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ac71cf24c210117a859e357175f9e20503280b81ad0d1eee0ad55f2f1c92e44f"
+  },
+  "id": "cGXhjuJ95ppOCeFS",
+  "tags": []
+}

@@ -1,0 +1,312 @@
+{
+  "name": "captions Ai",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Captions",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Api",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Creater",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Priya-1"
+                  },
+                  {
+                    "option": "Priya-2"
+                  },
+                  {
+                    "option": "Priya-3"
+                  },
+                  {
+                    "option": "Tanya-1"
+                  },
+                  {
+                    "option": "Tanya-2"
+                  },
+                  {
+                    "option": "Tanya-3"
+                  },
+                  {
+                    "option": "Amanda-3"
+                  },
+                  {
+                    "option": "Grace-2"
+                  },
+                  {
+                    "option": "Grace-3"
+                  },
+                  {
+                    "option": "Kira"
+                  },
+                  {
+                    "option": "Brooke-1"
+                  },
+                  {
+                    "option": "Brooke-2"
+                  },
+                  {
+                    "option": "Lucy-1"
+                  },
+                  {
+                    "option": "Lucy-3"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -220,
+        0
+      ],
+      "id": "8710dc96-394a-4a85-97b3-d5872cc4bbeb",
+      "name": "On form submission",
+      "webhookId": "70e41cca-b240-4af4-8d9f-447aad1c43fa"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=I want to generate a single Hinglish script, written in a female tone, with the following very specific rules and structure:\n\n🎯 Purpose of the Script\nTo promote a website where users can receive a reward (up to ₹500) for completing 5 simple tasks (like surveys or data entry) in just a few minutes — no payment required.\n\n📏 Format & Output Rules\n✅ Output ONLY the script text.\n\n❌ Do NOT include:\n\nHeadings like “Here’s a script”\n\nQuotes (\" \" or ' ')\n\nMarkdown/code formatting (e.g., ```)\n\nExplanations before or after\n\nAny prefix or suffix — just the raw text\n\n📝 Length: Approximately 400 characters\n\n🌐 Language: Hinglish (a mix of conversational Hindi + English)\n\n🎙️ Tone: Relatable, friendly, female voice — like a real person sharing her own experience (not robotic, overhyped, or fake)\n\n⚠️ Words & Phrases to AVOID (to stay compliant)\nThese phrases are often flagged or rejected by platforms like Captions.ai, Instagram, or TikTok. Don’t use them.\n\n❌ Category\t❌ Banned Words\nFinancial Claims\t\"Guaranteed income\", \"Instant payout\", \"Passive income\"\nFalse Promises\t\"Free money\", \"No effort\", \"Earn ₹500 daily\", \"No work\", \"Effortless earning\"\nInvestment Terms\t\"Zero investment\", \"ROI\", \"Double your money\", \"High returns\"\nClickbait\t\"Secret trick\", \"Don’t tell anyone\", \"One hack to get rich\"\nSensitive Niches\t\"Crypto\", \"Forex\", \"Casino\", \"Gambling\", \"Bet\"\nFalse Urgency\t\"Act fast or lose\", \"Only today\", \"Last chance\", \"Limited spots (if false)\"\n\n✅ Use These Phrases Instead\n❌ Don’t Say\t✅ Say Instead\n\"Free money\"\t\"Reward after tasks\"\n\"Zero investment\"\t\"No payment required\"\n\"Guaranteed payout\"\t\"Based on my experience\"\n\"Earn ₹500 daily\"\t\"I got ₹500 today\"\n\"Easy money\"\t\"Simple kaam se reward\"\n\"Act fast\"\t\"Link bio mein diya hai — dekh lo\"\n\n✅ Copy-Paste This Prompt Into n8n:\npgsql\nCopy\nEdit\nWrite one Hinglish script in a relatable, friendly female tone, around 400 characters long. The script should promote a website where users can earn up to ₹500 by completing 5 simple tasks (like short surveys or data entry) in a few minutes — no payment required. Emphasize the speaker is sharing her personal experience and not making any guarantees. Use only safe, realistic words. Avoid banned phrases like “guaranteed income,” “free money,” “easy money,” “zero investment,” “earn ₹500 daily,” “crypto,” or “secret trick.” Output only the script — no quotes, no markdown, no headings, no formatting, no extra text.\n✅ Example of a Perfect Output:\narduino\nCopy\nEdit\nYaar, mujhe pehle laga fake hoga. Lekin maine try kiya — kuch simple tasks kiye aur ₹500 tak ka reward mil gaya. Na koi paisa laga, na download ki zarurat thi. Sirf phone se 2 minute ka kaam. Main toh khush ho gayi! Tum bhi dekh lo, link bio mein diya hai!\n🎯 Final Summary\nYour AI should:\n\nOutput only the raw script\n\nUse natural Hinglish\n\nUse a female voice with relatable tone\n\nPromote a simple, real task-based reward\n\nAvoid all flagged terms or unrealistic promises",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "edbe807d-081a-4f05-a81f-cdec5a54a3a1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        220
+      ],
+      "id": "968e2ff0-10bd-49f7-9e8e-1555118000d8",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IgeNM61Z1k2puIjC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.captions.ai/api/creator/submit",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "={{ $('On form submission').item.json.Api }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "script",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "creatorName",
+              "value": "={{ $('On form submission').item.json.Creater }}"
+            },
+            {
+              "name": "resolution",
+              "value": "4k"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        376,
+        0
+      ],
+      "id": "225f3822-ce3c-46eb-993e-7c621917a5b0",
+      "name": "Submit to Captions.ai"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.captions.ai/api/creator/poll",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "={{ $('On form submission').item.json.Api }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "operationId",
+              "value": "={{ $json.operationId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        816,
+        0
+      ],
+      "id": "8e551c46-0df7-4fac-bd48-437bccd371a5",
+      "name": "Poll Captions.ai",
+      "executeOnce": false,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        596,
+        0
+      ],
+      "id": "0d9c0cf5-1f49-4c75-b2e3-e93405b8abb6",
+      "name": "Wait",
+      "webhookId": "b11d21aa-2400-42ee-9d1f-c3b95a87caaf"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1020,
+        0
+      ],
+      "id": "7248fa41-fc3a-40f5-a14d-788885ec75c7",
+      "name": "Download Video"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Submit to Captions.ai",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submit to Captions.ai": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Poll Captions.ai",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Poll Captions.ai": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "87a68190-767f-4e50-b5bf-caf56d4f6f8d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ac71cf24c210117a859e357175f9e20503280b81ad0d1eee0ad55f2f1c92e44f"
+  },
+  "id": "5oax4kbPjTqOTaKB",
+  "tags": []
+}

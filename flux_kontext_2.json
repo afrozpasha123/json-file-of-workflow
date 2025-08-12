@@ -1,0 +1,288 @@
+{
+  "name": "flux kontext-2",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a Prompt For An Ai Inlfuencer ",
+        "options": {
+          "systemMessage": "=Give A prompt To make a Model of a girl in Bikini or laungre \nMake sure the pormpt should be realistic or you can this also use this in pormpt ultra-realistic photography, 8K detail, Canon EOS R5, Vogue editorial style, Instagram model aesthetic.\n \nImportant Rules in the pormpt must\n- add this prompt \"the photo should shoot by iphone give the skin texture \"\n- give the pose idead in the pormpt \n- ultra-realistic photo of a [person description], natural skin texture, imperfect yet expressive features, subtle asymmetry, pores and fine lines visible, natural lighting, slight facial blemishes or flyaway hairs, casual expression — shot with an iPhone 14 Pro, shallow depth of field, slight lens flare, soft HDR tone, realistic shadows and highlights, handheld composition, ambient background blur\n1- Make sure the girl waer a Bikini or a laungre\n2- for Background think of aesthetic Background like the Sea,beach,a Wall.\n3- Give the Pose Idea Also Aesthetic Pose \n4- Every Pormpt Contain Different type of Bra or A Laungre or anything that make model look More sexy.\n5- Give the expression also\n6- Sometime Give the prompt full body photo also \n7- what ever the model it should look sexy  \n8- add this also in any one of this the photo look like it was click by i phone camera,Canon EOS R5\n9- the lighting or the skin sholud not look like the ai generated  \n10- Give Only One pormpt in that there should be all things include\n11- The prompt should be max to max 200-250 words only with all the things contain \n\n\n\n*NO Other word should not contain the prompt. Give only the pormpt*\n*For One Execution Give only 1 Photo Idea*"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -220,
+        180
+      ],
+      "id": "3ace472a-c701-4c6b-8090-5424ff0968a5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        400
+      ],
+      "id": "1fd297e0-d179-4267-8b01-1e19ed00bd53",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IgeNM61Z1k2puIjC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://chendy-nag-flux-1-kontext-dev.hf.space/gradio_api/call/sample",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": [\n    {\n      \"path\": \"https://iili.io/Fgwi6mP.th.png\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    \"{{ $json.output.replace(/\\n/g, ' ') }}\",\n    \"The Image should not be in Glitch \",\n    10,\n    \"Low resolution, blurry, lack of details\",\n    1,\n    256,\n    256,\n    1,\n    1,\n    true,\n    true\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        180
+      ],
+      "id": "331caa4e-fcfc-49e4-b05e-aebf2b3a5b0d",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "url": "=https://black-forest-labs-flux-1-kontext-dev.hf.space/gradio_api/call/infer/{{ $json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        600,
+        180
+      ],
+      "id": "47058c56-c5d0-4469-af08-9544230bb4f9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Step 1: Get the data field as a string\nconst raw = $json.data;\n\n// Step 2: Match the JSON part after \"data:\"\nconst match = raw.match(/data: (\\[.*?\\])\\n?/);\n\nif (!match) {\n  return [{ json: { error: \"Invalid data format\" } }];\n}\n\n// Step 3: Parse the JSON array string\nconst dataArray = JSON.parse(match[1]);\n\n// Step 4: Get the URL from the first object\nconst imageUrl = dataArray[0]?.url || null;\n\n// Step 5: Return it\nreturn [\n  {\n    json: {\n      finalUrl: imageUrl\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        180
+      ],
+      "id": "e0e0b69d-ea86-4b7b-a647-9f6a7b392b44",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.finalUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        180
+      ],
+      "id": "a70fe93d-3c56-43dc-9369-87bfeaa9027a",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "@hin8n",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1240,
+        180
+      ],
+      "id": "9d7703cd-c127-4a19-85d1-f73ffb870098",
+      "name": "Telegram1",
+      "webhookId": "04db47b7-42a6-4bc7-8e07-3a3d0dd81d3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -440,
+        180
+      ],
+      "id": "a219d19b-9679-4d13-b095-995b48a7d426",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "@hin8n",
+        "text": "Start",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -200,
+        -20
+      ],
+      "id": "526a1b23-b431-4c10-bc61-87347032b9f6",
+      "name": "Telegram",
+      "webhookId": "04db47b7-42a6-4bc7-8e07-3a3d0dd81d3b",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        380,
+        180
+      ],
+      "id": "50757bc5-929e-457f-93a7-f8e8e385e358",
+      "name": "Wait",
+      "webhookId": "d41819dc-acd2-4ae8-a2b0-e13fea841644"
+    }
+  ],
+  "pinData": {
+    "AI Agent": [
+      {
+        "json": {
+          "output": "Ultra-realistic photography, 8K detail, Canon EOS R5, Vogue editorial style, Instagram model aesthetic of a young woman (23 years old), dark curly hair, freckles, athletic build, wearing a delicate lace black bralette and high-waisted denim shorts, standing confidently against a textured white brick wall, one hand playfully tucked into her pocket, other hand gently touching her hair, slight smirk on her face, genuine smile lines around her eyes. the photo should shoot by iphone give the skin texture .Aesthetic Pose. ultra-realistic photo of a [young woman (23 years old), dark curly hair, freckles, athletic build], natural skin texture, imperfect yet expressive features, subtle asymmetry, pores and fine lines visible, natural lighting, slight facial blemishes or flyaway hairs, casual expression — shot with an iPhone 14 Pro, shallow depth of field, slight lens flare, soft HDR tone, realistic shadows and highlights, handheld composition, ambient background blur. Photo look like it was click by i phone camera. Lighting and Skin Should not look like AI generated.\n"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2751681d-75de-457a-ba57-bf7c12b58d71",
+  "meta": {
+    "instanceId": "ac71cf24c210117a859e357175f9e20503280b81ad0d1eee0ad55f2f1c92e44f"
+  },
+  "id": "6QetVwEm0OGsYNAO",
+  "tags": []
+}

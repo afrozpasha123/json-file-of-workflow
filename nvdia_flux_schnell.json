@@ -1,0 +1,197 @@
+{
+  "name": "nvdia flux schnell",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ai.api.nvidia.com/v1/genai/black-forest-labs/flux.1-dev",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "authorization",
+              "value": "Bearer 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"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \" {{ $json.chatInput }}\",\n  \"height\": 1024,\n  \"width\": 1024,\n  \"cfg_scale\": 5,\n  \"mode\": \"base\",\n  \"image\": null,\n  \"samples\": 1,\n  \"seed\": 0,\n  \"steps\": 50\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        20
+      ],
+      "id": "34a96142-1ce8-49dd-a887-8f6411f566e4",
+      "name": "HTTP Request",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "image_data_url",
+              "value": "={{ 'data:image/png;base64,' + $json.base64Image }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "37ece582-f549-4c1d-a60d-55c3c198d97d",
+      "type": "n8n-nodes-base.set",
+      "name": "Set Display",
+      "typeVersion": 1,
+      "position": [
+        640,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ json: { base64Image: $json.artifacts[0].base64 } }];"
+      },
+      "id": "f65ca675-6f14-429d-a857-cd341a764107",
+      "type": "n8n-nodes-base.function",
+      "name": "Extract Base",
+      "typeVersion": 1,
+      "position": [
+        420,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const dataUrl = $json.image_data_url;\nconst base64 = dataUrl.split(',')[1];\n\nreturn [{\n  json: {},\n  binary: {\n    data: {\n      data: base64,\n      mimeType: 'image/png',\n      fileName: 'image.png'\n    }\n  }\n}];"
+      },
+      "id": "50ff476e-999f-49ef-9c6f-0364af18f1b3",
+      "name": "Remove Base64 Header",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        860,
+        20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "@hin8n",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1060,
+        0
+      ],
+      "id": "e93e24f7-0e67-457e-9b54-f09866691522",
+      "name": "Send a photo message",
+      "webhookId": "7ba7441d-4911-47f8-a934-d81f77b3fb62",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "allowFileUploads": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        20
+      ],
+      "id": "6cbc6919-bd63-4aa0-8dc4-5ce6cf791a9a",
+      "name": "When chat message received",
+      "webhookId": "59d531a4-2316-4642-aa4a-419db4dff6e5"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Extract Base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Display": {
+      "main": [
+        [
+          {
+            "node": "Remove Base64 Header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Base": {
+      "main": [
+        [
+          {
+            "node": "Set Display",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Base64 Header": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8054f4e1-de05-49c4-9532-0ecfdf7325ee",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ac71cf24c210117a859e357175f9e20503280b81ad0d1eee0ad55f2f1c92e44f"
+  },
+  "id": "x4j2ZyjZFkwRZyT0",
+  "tags": []
+}
