@@ -9,20 +9,20 @@
           "parameters": [
             {
               "name": "x-goog-api-key",
-              "value": "Your Gemini APi KEy "
+              "value": "YOUR GEMINI KEY "
             }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"{{ $('AI Agent').item.json.output.replace(/\\n/g, \" \") }}\"\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/jpeg\",\n            \"data\": \"{{ $json.text }}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseModalities\": [\n      \"TEXT\",\n      \"IMAGE\"\n    ]\n  }\n}",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Use the image of mine A hyper-realistic Instagram-style influencer photo of a Amature woman with a alegant figure in 9:16 . She is wearing a fashionable short bikini that enhances her curves, with no accessory, with stylish posing that feels natural and confident, like a lifestyle influencer. Background should be a indoor house in any pose on the any house furniture setting with bright natural light, soft shadows, and vibrant colors. Skin tones, textures, and hair details should look photorealistic, avoiding any AI distortions. The image should look like a real Instagram photo, not AI-generated, with sharp detailing, trendy styling, and influencer vibes.make sure you define the body as the it written no mistake, and make sure the face is consistence from the reference image \"\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/jpeg\",\n            \"data\": \"{{ $json.text }}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseModalities\": [\n      \"TEXT\",\n      \"IMAGE\"\n    ]\n  }\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        816,
-        180
+        500,
+        1880
       ],
       "id": "f2658e3c-346f-43ed-81c8-85a3f4285f47",
       "name": "HTTP Request1"
@@ -35,8 +35,8 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        1036,
-        180
+        720,
+        1880
       ],
       "id": "1be821fc-5c31-4f56-9f7f-7c9da7225ec2",
       "name": "Split Out"
@@ -69,8 +69,8 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        1256,
-        180
+        940,
+        1880
       ],
       "id": "c2e11a53-db33-438a-9257-f711fea1601f",
       "name": "Filter"
@@ -84,11 +84,36 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1476,
-        180
+        1160,
+        1880
       ],
       "id": "1d0b72b4-bd6e-4522-8a5d-7e8f31b3231a",
       "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "@hin8n",
+        "binaryData": true,
+        "additionalFields": {
+          "caption": "Done "
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1380,
+        1780
+      ],
+      "id": "7388c027-829b-43f3-a6f8-811c6afe92eb",
+      "name": "Telegram",
+      "webhookId": "de1a8403-dda2-4b0b-a0c9-597de41a42de",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
     },
     {
       "parameters": {
@@ -104,8 +129,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        0,
-        180
+        60,
+        1880
       ],
       "id": "c61f1bdc-732c-4b28-9a98-f18f13bf6e3f",
       "name": "Schedule Trigger"
@@ -117,48 +142,61 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        596,
-        180
+        280,
+        1880
       ],
       "id": "60f8d267-b0b9-48c5-9d3e-e4d0bde13427",
       "name": "Code"
     },
     {
       "parameters": {
-        "promptType": "define",
-        "text": "create a prompt For Ai Influencer make sure the output only contains the pormpt no other words should it contain , at last do not give the puntuation ok .\n",
-        "options": {
-          "systemMessage": "=A Amature woman in a sexy outfit. use any of this outfit idea By Top Style\nTriangle bikini, bandeau bikini, halter-neck bikini, one-shoulder bikini, underwire bikini, sporty bikini top, push-up bikini, string bikini bottom, high-cut bikini bottom, cheeky bikini bottom, full coverage bikini bottom, boyshort bikini bottom, high-waist bikini bottom, monokini, tankini, strapless bikini, cut-out bikini, wrap bikini, ruffled bikini\n\nAnd For pose choose any one this a Pose \nStanding Poses:\nStanding straight with one hand on hip, other relaxed by side\nLeaning on a wall with crossed legs, looking sideways\nArching back slightly, hand on waist, looking over shoulder\nOne leg slightly bent, hands gently brushing hair\nCrossed arms under chest, confident gaze, \nA Mirror Selfie \nSitting Poses:\nSitting on edge of pool or beach chair, legs crossed or stretched\nSitting on sand with knees up, arms around knees, looking at camera\nSide pose on lounge chair, head tilted back\nKneeling on towel or deck, looking over shoulder\nSitting casually on stairs or deck, legs slightly apart\nPlayful / Casual Poses:\nTaking a mirror or selfie-style pose\nHair flip mid-motion, playful smile\nWalking along beach or poolside, one foot forward, relaxed arms\nAdjusting hair or bikini strap while looking away from camera\nSplashing water or leaning into sun, playful natural motion\n\nStyle & Vibe: high-fashion editorial, Instagram model look, modern lighting, soft shadows, confident, chic, sexy yet classy.\n\n\nNo extra limbs, no missing or distorted fingers, no broken anatomy, no asymmetrical eyes, no unrealistic teeth, no plastic or oily skin, no melted or warped hair, no warped or unrealistic clothing, no blurry accessories, no distorted shoes, no inconsistent shadows, no unnatural reflections, no text, no logos, no gibberish, no AI artifacts, no uncanny valley effect, no low-resolution, no cartoonish features, no oversaturated colors, no deformed body parts, no extra faces, no multiple faces, no cropped body parts, no unnatural poses"
-        }
+        "method": "POST",
+        "url": "https://api.imgbb.com/1/upload?key=d8ec2bf6609cad06a31ce7fa5a5010e7",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 2,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        220,
-        180
+        1380,
+        1980
       ],
-      "id": "c20bb27c-0c15-4372-b9b9-e3639a59e641",
-      "name": "AI Agent"
+      "id": "527a0058-7cdb-4c02-9c1a-f1ba7768fec3",
+      "name": "HTTP Request3"
     },
     {
       "parameters": {
-        "modelName": "models/gemini-2.0-flash",
+        "method": "POST",
+        "url": "https://hook.us2.make.com/on8s9bnxw6aabnagocjoaqjyf9mwk79e",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "Url ",
+              "value": "={{ $json.data.url }}"
+            }
+          ]
+        },
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
-        308,
-        400
+        1600,
+        1980
       ],
-      "id": "7668984d-b49f-41f9-b02c-2413a023652d",
-      "name": "Google Gemini Chat Model",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "MdzeZs4XiRzGz5rC",
-          "name": "pialot"
-        }
-      }
+      "id": "1ed4c08a-7274-430d-b563-c34b8833e9c5",
+      "name": "HTTP Request5"
     }
   ],
   "connections": {
@@ -197,6 +235,22 @@
     },
     "Convert to File1": {
       "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
         []
       ]
     },
@@ -204,7 +258,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -222,23 +276,12 @@
         ]
       ]
     },
-    "AI Agent": {
+    "HTTP Request3": {
       "main": [
         [
           {
-            "node": "Code",
+            "node": "HTTP Request5",
             "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Gemini Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_languageModel",
             "index": 0
           }
         ]
