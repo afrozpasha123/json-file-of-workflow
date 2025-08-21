@@ -1,0 +1,120 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "crop",
+        "width": 1080,
+        "height": 1650,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        560,
+        340
+      ],
+      "id": "63146e81-bcf6-4853-8b2a-fcd151587039",
+      "name": "Edit Image"
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.message.text }}?width=957&height=1930&seed={seed}&model=flux",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        340,
+        340
+      ],
+      "id": "bdd3ad37-cfeb-4bc6-8336-3f0ff315ebc4",
+      "name": "pollination-ai-image"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        100,
+        340
+      ],
+      "id": "e5acbcad-46d1-4f2c-a456-7722f7e49d4a",
+      "name": "Telegram Trigger",
+      "webhookId": "ebc8d265-d1fc-4eb3-8a73-514e581f2d48",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        340
+      ],
+      "id": "d64bada7-5427-4d8a-abc0-b7bc5868b946",
+      "name": "Telegram",
+      "webhookId": "34ebca3a-3a18-4c04-891b-d08f6566fffa",
+      "credentials": {
+        "telegramApi": {
+          "id": "CPQd1i443K2ouNmI",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Edit Image": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pollination-ai-image": {
+      "main": [
+        [
+          {
+            "node": "Edit Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "pollination-ai-image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ac71cf24c210117a859e357175f9e20503280b81ad0d1eee0ad55f2f1c92e44f"
+  }
+}
