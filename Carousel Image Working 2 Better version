@@ -1,0 +1,676 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ff134998-f533-41d5-9939-ff9d53075fff",
+              "name": "1 Url ",
+              "value": "={{ $json.attachments[0].url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        512
+      ],
+      "id": "6864df43-2481-4b38-b129-7f5fdeae941d",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "method": "=POST",
+        "url": "https://hook.us2.make.com/d9iigt11wlu68ium3gidhpkkwwywwvzw",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "Url 1",
+              "value": "={{ $json.url1 }}"
+            },
+            {
+              "name": "Url 2",
+              "value": "={{ $json.url2 }}"
+            },
+            {
+              "name": "Url 3",
+              "value": "={{ $json.url3 }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        224
+      ],
+      "id": "4dd3df6a-2f63-4b30-8cb7-1b8486debc10",
+      "name": "MAKE.COM1",
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "authentication": "webhook",
+        "content": "Done",
+        "options": {},
+        "files": {
+          "values": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        656,
+        416
+      ],
+      "id": "9d64e68b-1969-4ae7-b892-f71dbc65ffab",
+      "name": "Discord",
+      "webhookId": "1b42133e-d02b-4fc0-b4a6-63e29a22ac94",
+      "credentials": {
+        "discordWebhookApi": {
+          "id": "hOj68FVpYHB7S5mZ",
+          "name": "Discord Webhook account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.topazlabs.com/image/v1/enhance",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "X-API-Key",
+              "value": "Topaz Api "
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "Standard V2"
+            },
+            {
+              "name": "output_width",
+              "value": "1080"
+            },
+            {
+              "name": "output_height",
+              "value": "1920"
+            },
+            {
+              "name": "crop_to_fill",
+              "value": "true"
+            },
+            {
+              "name": "subject_detection",
+              "value": "All"
+            },
+            {
+              "name": "face_enhancement",
+              "value": "true"
+            },
+            {
+              "name": "face_enhancement_creativity",
+              "value": "0"
+            },
+            {
+              "name": "face_enhancement_strength",
+              "value": "0"
+            },
+            {
+              "name": "output_format",
+              "value": "jpeg"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        432,
+        464
+      ],
+      "id": "a848ef0b-1684-4631-bf5c-dddcfeb93766",
+      "name": "Topaz En1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -912,
+        288
+      ],
+      "id": "2fb4c47d-57fc-47d0-9e32-ae1a2286dc23",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81d0d542-79a8-4823-9d06-f4a168d35715",
+              "name": "Product image",
+              "value": "={{ $json.body.Url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1360,
+        288
+      ],
+      "id": "5da99fbb-6dd4-4ffa-af1d-e460b53be884",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the JSON output from the previous node (first item only)\nconst data = $json;\n\n// Create 3 copies with different \"name\"\nreturn [\n  { json: { ...data, name: \"split 1\" } },\n  { json: { ...data, name: \"split 2\" } },\n  { json: { ...data, name: \"split 3\" } }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1136,
+        288
+      ],
+      "id": "a23d310a-3a89-480e-976d-ef6a5dec73b8",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all input items\nconst items = $input.all();\n\n// Build a single object with renamed keys\nlet result = {};\nitems.forEach((item, index) => {\n  const url = item.json[\"['1 Url ']\"];\n  result[`url${index + 1}`] = url;\n});\n\n// Return as one item\nreturn [\n  {\n    json: result\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        272
+      ],
+      "id": "66327396-41e9-4d74-92c9-184fd8e9ed3a",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "chatId": "@hin8n",
+        "text": "=Send to Make and Done all From carousel Test  {{ $json.url1 }}\n\n\n{{ $json.url2 }} \n\n\n{{ $json.url3 }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        272
+      ],
+      "id": "3af4ccb3-65e5-4aed-900e-0056bca3e901",
+      "name": "Send a text message",
+      "webhookId": "fccf7c50-6505-47f9-bb00-b2a6114ff229",
+      "credentials": {
+        "telegramApi": {
+          "id": "Yy32jVk9a1aauJfa",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "@hin8n",
+        "text": "Got it From Webhook ",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        48
+      ],
+      "id": "139f2112-e2fe-4d6e-b66b-b4ae19c2b516",
+      "name": "Send a text message1",
+      "webhookId": "fccf7c50-6505-47f9-bb00-b2a6114ff229",
+      "credentials": {
+        "telegramApi": {
+          "id": "Yy32jVk9a1aauJfa",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "['1 Url ']",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        272
+      ],
+      "id": "fa7de825-b755-4276-a7f1-c26d428e852f",
+      "name": "Split Out2"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "5e727ec3-0c4f-4645-b432-8f5cce66ae42",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1584,
+        192
+      ],
+      "id": "4b17b05a-d128-4857-922c-3599dfddb2f5",
+      "name": "Webhook1",
+      "webhookId": "5e727ec3-0c4f-4645-b432-8f5cce66ae42"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "@hin8n",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        656,
+        224
+      ],
+      "id": "96605c60-7ea8-4649-97a9-ad5f68ae8ca7",
+      "name": "Send a photo message1",
+      "webhookId": "fccf7c50-6505-47f9-bb00-b2a6114ff229",
+      "credentials": {
+        "telegramApi": {
+          "id": "Yy32jVk9a1aauJfa",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        464
+      ],
+      "id": "0e10e0c2-d239-4cc4-b59b-93ea1b441f6b",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "amount": 20
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -464,
+        528
+      ],
+      "id": "0d8bfe0d-36e0-40f1-b06a-8cb81ca01be7",
+      "name": "Wait",
+      "webhookId": "0b7db659-645a-4432-a03b-f390fe1d624b"
+    },
+    {
+      "parameters": {
+        "url": "=https://0906a3d4a5cb4c7f3f.gradio.live/gradio_api/call/gemini_generate/{{ $json.event_id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -240,
+        528
+      ],
+      "id": "7cf538e8-bf60-41ab-a1fc-572e91dec7fe",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://0906a3d4a5cb4c7f3f.gradio.live/gradio_api/call/gemini_generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": [\n    \"AIzaSyAtmj6-XJOFfXpzbT5NpSkQ1t_s_Y0Lzj8\",\n    \"Create a professional e-commerce fashion mirror selfie photo. Take the product refernce image from second image and let the model woman from the first image wear it.Generate a realistic,shot of the woman wearing the dress, with the lighting and shadows adjusted to match the indoor environment, with Aesthetic poses like for instagram post \",\n    {\n      \"path\": \"https://i.ibb.co/G4mkQ8dn/Main-Image-Ai-Influencer.jpg\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    {\n      \"path\": \"{{ $json['Product image'] }}\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -688,
+        528
+      ],
+      "id": "81e65618-17d6-454b-9c3d-d5a4ee37d96f",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get input from previous node\nconst inputData = $json[\"data\"]; // or $node[\"PreviousNodeName\"].json[\"data\"]\n\n// The previous node output is a string starting with 'event: complete\\ndata: [...]'\n// We need to extract the JSON part after 'data: '\nconst dataMatch = inputData.match(/data:\\s*(.*)/s);\n\nif (!dataMatch) {\n    return [{ error: \"Could not find data in input\" }];\n}\n\nlet parsedData;\n\ntry {\n    parsedData = JSON.parse(dataMatch[1]);\n} catch (err) {\n    return [{ error: \"Failed to parse JSON from data\", details: err.message }];\n}\n\n// parsedData example:\n// [\n//   \"✅ Success\",\n//   {\n//      \"path\": \"/tmp/gradio/xyz.jpeg\",\n//      \"url\": \"https://....jpeg\",\n//      \"size\": null,\n//      \"orig_name\": \"xyz.jpeg\",\n//      \"mime_type\": null,\n//      \"is_stream\": false,\n//      \"meta\": {\"_type\":\"gradio.FileData\"}\n//   },\n//   \"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA...\"   <-- base64\n// ]\n\nconst result = {\n    url: parsedData[1].url,\n    base64: parsedData[2]\n};\n\nreturn [result];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -16,
+        528
+      ],
+      "id": "9bd61d11-1baf-4394-93f9-a5ae87bba97e",
+      "name": "url and base64",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -688,
+        48
+      ],
+      "id": "83b06f21-4929-4c71-9266-16924b24daa9",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "chatId": "@hin8n",
+        "text": "error in any",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        704
+      ],
+      "id": "64d913b5-e44d-4998-a76c-e59aaa7db8af",
+      "name": "Send a text message2",
+      "webhookId": "fccf7c50-6505-47f9-bb00-b2a6114ff229",
+      "credentials": {
+        "telegramApi": {
+          "id": "Yy32jVk9a1aauJfa",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        304,
+        704
+      ],
+      "id": "dea154de-89a6-4e32-907b-4f6e0948309e",
+      "name": "Merge1"
+    }
+  ],
+  "connections": {
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MAKE.COM1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Topaz En1": {
+      "main": [
+        [
+          {
+            "node": "Discord",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a photo message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Split Out2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "MAKE.COM1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out2": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Topaz En1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "url and base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "url and base64": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f635df4848250cb49c7803c749a960fdbc77f95241c7e4e7e3bc254503e6da17"
+  }
+}
