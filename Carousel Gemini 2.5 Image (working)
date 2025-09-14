@@ -130,11 +130,11 @@
             },
             {
               "name": "face_enhancement_creativity",
-              "value": "0"
+              "value": "0.8"
             },
             {
               "name": "face_enhancement_strength",
-              "value": "0"
+              "value": "0.8"
             },
             {
               "name": "output_format",
@@ -178,7 +178,7 @@
             {
               "id": "81d0d542-79a8-4823-9d06-f4a168d35715",
               "name": "Product image",
-              "value": "={{ $json.fields.Url }}",
+              "value": "={{ $json.body.Url }}",
               "type": "string"
             }
           ]
@@ -407,10 +407,10 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -432,
-        160
+        -544,
+        176
       ],
-      "id": "c3fdb852-53ee-4ddd-954a-6a816c407241",
+      "id": "a68bcc46-c4a6-4749-93ad-13959e68416c",
       "name": "Wait",
       "webhookId": "0b7db659-645a-4432-a03b-f390fe1d624b"
     },
@@ -422,10 +422,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -224,
-        160
+        -320,
+        176
       ],
-      "id": "a76352d3-ab1c-4979-81bb-9a02ed4c9099",
+      "id": "4cbd01be-1419-4354-bbc0-1ab1e44d2cf5",
       "name": "HTTP Request1"
     },
     {
@@ -440,10 +440,10 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -656,
-        160
+        -768,
+        176
       ],
-      "id": "9e9d9dc1-90db-47ad-a86e-be73a813b554",
+      "id": "a38c16f5-f4c0-45a0-b1b9-550beae5dfa9",
       "name": "HTTP Request"
     }
   ],
@@ -567,13 +567,7 @@
     },
     "Convert to File": {
       "main": [
-        [
-          {
-            "node": "Topaz En1",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "url and base64": {
