@@ -18,7 +18,7 @@
       "typeVersion": 3.4,
       "position": [
         832,
-        320
+        400
       ],
       "id": "6864df43-2481-4b38-b129-7f5fdeae941d",
       "name": "Edit Fields4"
@@ -49,8 +49,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -384,
-        -208
+        -368,
+        -240
       ],
       "id": "4dd3df6a-2f63-4b30-8cb7-1b8486debc10",
       "name": "MAKE.COM1",
@@ -71,7 +71,7 @@
       "typeVersion": 2,
       "position": [
         608,
-        128
+        224
       ],
       "id": "9d64e68b-1969-4ae7-b892-f71dbc65ffab",
       "name": "Discord",
@@ -153,7 +153,7 @@
       "typeVersion": 4.2,
       "position": [
         384,
-        32
+        128
       ],
       "id": "a848ef0b-1684-4631-bf5c-dddcfeb93766",
       "name": "Topaz En1"
@@ -166,7 +166,7 @@
       "typeVersion": 3,
       "position": [
         -960,
-        128
+        176
       ],
       "id": "2fb4c47d-57fc-47d0-9e32-ae1a2286dc23",
       "name": "Loop Over Items"
@@ -189,7 +189,7 @@
       "typeVersion": 3.4,
       "position": [
         -1408,
-        128
+        176
       ],
       "id": "5da99fbb-6dd4-4ffa-af1d-e460b53be884",
       "name": "Edit Fields"
@@ -202,7 +202,7 @@
       "typeVersion": 2,
       "position": [
         -1184,
-        128
+        176
       ],
       "id": "a23d310a-3a89-480e-976d-ef6a5dec73b8",
       "name": "Code1"
@@ -214,7 +214,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -576,
+        -512,
         -16
       ],
       "id": "66327396-41e9-4d74-92c9-184fd8e9ed3a",
@@ -229,8 +229,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -208,
-        -16
+        -128,
+        -32
       ],
       "id": "3af4ccb3-65e5-4aed-900e-0056bca3e901",
       "name": "Send a text message",
@@ -251,8 +251,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -736,
-        -208
+        -784,
+        -272
       ],
       "id": "139f2112-e2fe-4d6e-b66b-b4ae19c2b516",
       "name": "Send a text message1",
@@ -288,8 +288,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        624,
-        -144
+        608,
+        32
       ],
       "id": "96605c60-7ea8-4649-97a9-ad5f68ae8ca7",
       "name": "Send a photo message1",
@@ -303,35 +303,6 @@
     },
     {
       "parameters": {
-        "operation": "toBinary",
-        "sourceProperty": "base64",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.convertToFile",
-      "typeVersion": 1.1,
-      "position": [
-        160,
-        32
-      ],
-      "id": "0e10e0c2-d239-4cc4-b59b-93ea1b441f6b",
-      "name": "Convert to File"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Get input from previous node\nconst inputData = $json[\"data\"]; // or $node[\"PreviousNodeName\"].json[\"data\"]\n\n// The previous node output is a string starting with 'event: complete\\ndata: [...]'\n// We need to extract the JSON part after 'data: '\nconst dataMatch = inputData.match(/data:\\s*(.*)/s);\n\nif (!dataMatch) {\n    return [{ error: \"Could not find data in input\" }];\n}\n\nlet parsedData;\n\ntry {\n    parsedData = JSON.parse(dataMatch[1]);\n} catch (err) {\n    return [{ error: \"Failed to parse JSON from data\", details: err.message }];\n}\n\n// parsedData example:\n// [\n//   \"✅ Success\",\n//   {\n//      \"path\": \"/tmp/gradio/xyz.jpeg\",\n//      \"url\": \"https://....jpeg\",\n//      \"size\": null,\n//      \"orig_name\": \"xyz.jpeg\",\n//      \"mime_type\": null,\n//      \"is_stream\": false,\n//      \"meta\": {\"_type\":\"gradio.FileData\"}\n//   },\n//   \"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDA...\"   <-- base64\n// ]\n\nconst result = {\n    url: parsedData[1].url,\n    base64: parsedData[2]\n};\n\nreturn [result];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -64,
-        176
-      ],
-      "id": "9bd61d11-1baf-4394-93f9-a5ae87bba97e",
-      "name": "url and base64",
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
         "method": "POST",
         "url": "https://n8n-gxhroqnd.us-east-1.clawcloudrun.com/webhook/71d6264d-61b4-47ea-817e-cff75d16e3f0",
         "options": {}
@@ -340,49 +311,10 @@
       "typeVersion": 4.2,
       "position": [
         160,
-        224
+        320
       ],
       "id": "c3788fff-47d0-48bc-9076-f1ad497c289f",
       "name": "HTTP Request2"
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "authentication": "airtableTokenApi",
-        "baseId": {
-          "__rl": true,
-          "value": "https://airtable.com/appMridyFTVZ7uWIi/tbliP2PD84HgH5vCi/viwWZMXxr9FCZCXXh?blocks=hide",
-          "mode": "url"
-        },
-        "tableId": {
-          "__rl": true,
-          "value": "https://airtable.com/appMridyFTVZ7uWIi/tbliP2PD84HgH5vCi/viwWZMXxr9FCZCXXh?blocks=hide",
-          "mode": "url"
-        },
-        "triggerField": "Url",
-        "additionalFields": {}
-      },
-      "type": "n8n-nodes-base.airtableTrigger",
-      "typeVersion": 1,
-      "position": [
-        -1632,
-        736
-      ],
-      "id": "2b5220ed-79a9-453e-9e21-7ab48b67a678",
-      "name": "Airtable Trigger",
-      "credentials": {
-        "airtableTokenApi": {
-          "id": "Yypgqfpw5hgn2oE8",
-          "name": "Airtable account 2"
-        }
-      },
-      "disabled": true
     },
     {
       "parameters": {
@@ -394,7 +326,7 @@
       "typeVersion": 2.1,
       "position": [
         -1632,
-        80
+        -16
       ],
       "id": "ee81d414-81d0-4906-a858-42c76f4a1e07",
       "name": "Webhook",
@@ -402,49 +334,94 @@
     },
     {
       "parameters": {
-        "amount": 30
+        "method": "POST",
+        "url": "https://firozshah02-onlybase64-009.hf.space/gradio_api/call/gemini_generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": [\n    \"AIzaSyAtmj6-XJOFfXpzbT5NpSkQ1t_s_Y0Lzj8\",\n    \"Create a professional e-commerce fashion mirror selfie with very close up photos . Take the product refernce image from second image and let the model woman from the first image wear it.Generate a realistic,shot of the woman wearing the dress, with the lighting and shadows adjusted to match the indoor environment, with Aesthetic poses like for instagram post, make a eyecatching images of it, make the e-commerce photos look bold shots of model so that can user simply interact with the image and feel to buy, make only 1 model in a image at a time\",\n    {\n      \"path\": \"https://i.ibb.co/0p62vcJp/2025-09-14-11-06-40-6288.png\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    {\n      \"path\": \"{{ $json['Product image'] }}\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -736,
+        176
+      ],
+      "id": "a38c16f5-f4c0-45a0-b1b9-550beae5dfa9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
       },
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        -544,
-        176
+        -512,
+        224
       ],
-      "id": "a68bcc46-c4a6-4749-93ad-13959e68416c",
+      "id": "cf006be7-ada2-4d6a-a6a1-fef95a9c6378",
       "name": "Wait",
       "webhookId": "0b7db659-645a-4432-a03b-f390fe1d624b"
     },
     {
       "parameters": {
-        "url": "=https://firozshah02-x07-1234.hf.space/gradio_api/call/gemini_generate/{{ $json.event_id }}",
+        "url": "=https://firozshah02-onlybase64-009.hf.space/gradio_api/call/gemini_generate/{{ $json.event_id }}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -320,
-        176
+        -288,
+        224
       ],
-      "id": "4cbd01be-1419-4354-bbc0-1ab1e44d2cf5",
+      "id": "2f609e9a-2083-4ca5-8639-e6a52ede7130",
       "name": "HTTP Request1"
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://firozshah02-x07-1234.hf.space/gradio_api/call/gemini_generate",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"data\": [\n    \"AIzaSyAtmj6-XJOFfXpzbT5NpSkQ1t_s_Y0Lzj8\",\n    \"Create a professional e-commerce fashion mirror selfie with very close up photos . Take the product refernce image from second image and let the model woman from the first image wear it.Generate a realistic,shot of the woman wearing the dress, with the lighting and shadows adjusted to match the indoor environment, with Aesthetic poses like for instagram post \",\n    {\n      \"path\": \"https://i.ibb.co/jPr3PWvX/image-5.png\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    {\n      \"path\": \"{{ $json['Product image'] }}\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    }\n  ]\n}",
+        "operation": "toBinary",
+        "sourceProperty": "base64",
         "options": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
       "position": [
-        -768,
-        176
+        160,
+        128
       ],
-      "id": "a38c16f5-f4c0-45a0-b1b9-550beae5dfa9",
-      "name": "HTTP Request"
+      "id": "a78705ff-af48-4a0e-9bad-9da54c3f6ea0",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        400
+      ],
+      "id": "624269bc-8d65-4c64-8296-2b74ce4aad9c",
+      "name": "Wait1",
+      "webhookId": "011a66e9-157a-4481-9ae9-4d56292c8206"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get raw data from previous node\nconst raw = $json.data;\n\n// Ensure it's a string\nconst text = String(raw);\n\n// Extract base64 between data: [\" and the last \"]\nconst match = text.match(/data:\\s*\\[\"([^\"]+)\"/);\n\nlet base64 = null;\nif (match) {\n  base64 = match[1];\n}\n\nreturn {\n  json: {\n    base64\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -64,
+        224
+      ],
+      "id": "61d07ffb-f93f-4b08-9327-8312b9b6b0fe",
+      "name": "Code",
+      "onError": "continueErrorOutput"
     }
   ],
   "connections": {
@@ -452,7 +429,7 @@
       "main": [
         [
           {
-            "node": "Loop Over Items",
+            "node": "Wait1",
             "type": "main",
             "index": 0
           }
@@ -565,34 +542,6 @@
         ]
       ]
     },
-    "Convert to File": {
-      "main": [
-        []
-      ]
-    },
-    "url and base64": {
-      "main": [
-        [
-          {
-            "node": "Convert to File",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "HTTP Request2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Airtable Trigger": {
-      "main": [
-        []
-      ]
-    },
     "Webhook": {
       "main": [
         [
@@ -603,6 +552,22 @@
           },
           {
             "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait",
             "type": "main",
             "index": 0
           }
@@ -624,23 +589,47 @@
       "main": [
         [
           {
-            "node": "url and base64",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTTP Request": {
+    "Convert to File": {
       "main": [
         [
           {
-            "node": "Wait",
+            "node": "Topaz En1",
             "type": "main",
             "index": 0
-          },
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
           {
-            "node": "Send a text message1",
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request2",
             "type": "main",
             "index": 0
           }
@@ -648,7 +637,41 @@
       ]
     }
   },
-  "pinData": {},
+  "pinData": {
+    "Webhook": [
+      {
+        "headers": {
+          "host": "n8n-automation-01.app.n8n.cloud",
+          "user-agent": "axios/1.8.3",
+          "content-length": "44",
+          "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
+          "accept-encoding": "gzip, br",
+          "cdn-loop": "cloudflare; loops=1; subreqs=1",
+          "cf-connecting-ip": "47.90.222.155",
+          "cf-ew-via": "15",
+          "cf-ipcountry": "US",
+          "cf-ray": "980618a331cb056c-IAD",
+          "cf-visitor": "{\"scheme\":\"https\"}",
+          "cf-worker": "n8n.cloud",
+          "content-type": "application/json",
+          "x-forwarded-for": "47.90.222.155, 172.71.190.49",
+          "x-forwarded-host": "n8n-automation-01.app.n8n.cloud",
+          "x-forwarded-port": "443",
+          "x-forwarded-proto": "https",
+          "x-forwarded-server": "traefik-prod-users-gwc-45-5cf4858c8f-dd5k2",
+          "x-is-trusted": "yes",
+          "x-real-ip": "47.90.222.155"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "Url": "https://i.ibb.co/s9xfkgvs/file.png"
+        },
+        "webhookUrl": "https://n8n-automation-01.app.n8n.cloud/webhook-test/068e3abe-85d9-4eb5-86c0-2d1316353517",
+        "executionMode": "test"
+      }
+    ]
+  },
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "f635df4848250cb49c7803c749a960fdbc77f95241c7e4e7e3bc254503e6da17"
