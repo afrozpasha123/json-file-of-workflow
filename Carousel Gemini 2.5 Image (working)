@@ -18,7 +18,7 @@
       "typeVersion": 3.4,
       "position": [
         832,
-        400
+        224
       ],
       "id": "6864df43-2481-4b38-b129-7f5fdeae941d",
       "name": "Edit Fields4"
@@ -49,8 +49,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -368,
-        -240
+        -288,
+        -88
       ],
       "id": "4dd3df6a-2f63-4b30-8cb7-1b8486debc10",
       "name": "MAKE.COM1",
@@ -96,7 +96,7 @@
             },
             {
               "name": "X-API-Key",
-              "value": "adf2c330-0cce-4db1-bd5e-a5c77ce41356"
+              "value": "a5633499-cb1d-4743-9d29-c480c54a50e0"
             }
           ]
         },
@@ -189,7 +189,7 @@
       "typeVersion": 3.4,
       "position": [
         -1408,
-        176
+        -40
       ],
       "id": "5da99fbb-6dd4-4ffa-af1d-e460b53be884",
       "name": "Edit Fields"
@@ -229,8 +229,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -128,
-        -32
+        -64,
+        -16
       ],
       "id": "3af4ccb3-65e5-4aed-900e-0056bca3e901",
       "name": "Send a text message",
@@ -245,14 +245,14 @@
     {
       "parameters": {
         "chatId": "@hin8n",
-        "text": "=The Workflow Has Run {{ $runIndex + 1 }} Times",
+        "text": "=The Workflow Has Run {{ $runIndex + 1 }} Times {{ $json.body.Url }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        -784,
-        -272
+        -512,
+        -208
       ],
       "id": "139f2112-e2fe-4d6e-b66b-b4ae19c2b516",
       "name": "Send a text message1",
@@ -272,8 +272,8 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        -736,
-        -16
+        -800,
+        48
       ],
       "id": "fa7de825-b755-4276-a7f1-c26d428e852f",
       "name": "Split Out2"
@@ -326,7 +326,7 @@
       "typeVersion": 2.1,
       "position": [
         -1632,
-        -16
+        -208
       ],
       "id": "ee81d414-81d0-4906-a858-42c76f4a1e07",
       "name": "Webhook",
@@ -338,14 +338,14 @@
         "url": "https://firozshah02-onlybase64-009.hf.space/gradio_api/call/gemini_generate",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"data\": [\n    \"AIzaSyAtmj6-XJOFfXpzbT5NpSkQ1t_s_Y0Lzj8\",\n    \"Create a professional e-commerce fashion mirror selfie with very close up photos . Take the product refernce image from second image and let the model woman from the first image wear it.Generate a realistic,shot of the woman wearing the dress, with the lighting and shadows adjusted to match the indoor environment, with Aesthetic poses like for instagram post, make a eyecatching images of it, make the e-commerce photos look bold shots of model so that can user simply interact with the image and feel to buy, make only 1 model in a image at a time\",\n    {\n      \"path\": \"https://i.ibb.co/0p62vcJp/2025-09-14-11-06-40-6288.png\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    {\n      \"path\": \"{{ $json['Product image'] }}\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    }\n  ]\n}",
+        "jsonBody": "={\n  \"data\": [\n    \"AIzaSyAtmj6-XJOFfXpzbT5NpSkQ1t_s_Y0Lzj8\",\n    \"Create a professional e-commerce fashion mirror selfie with very close up photos . Take the product refernce image from second image and let the model woman from the first image wear it.Generate a realistic,shot of the woman wearing the dress, with the lighting and shadows adjusted to match the indoor environment, with Aesthetic poses like for instagram post, make a eyecatching images of it, make the e-commerce photos look bold shots of model so that can user simply interact with the image and feel to buy, make only 1 model in a image at a time\",\n    {\n      \"path\": \"https://i.ibb.co/jPr3PWvX/image-5.png\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    },\n    {\n      \"path\": \"{{ $json['Product image'] }}\",\n      \"meta\": {\n        \"_type\": \"gradio.FileData\"\n      }\n    }\n  ]\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         -736,
-        176
+        224
       ],
       "id": "a38c16f5-f4c0-45a0-b1b9-550beae5dfa9",
       "name": "HTTP Request"
@@ -402,8 +402,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        1040,
-        400
+        1056,
+        392
       ],
       "id": "624269bc-8d65-4c64-8296-2b74ce4aad9c",
       "name": "Wait1",
@@ -422,6 +422,65 @@
       "id": "61d07ffb-f93f-4b08-9327-8312b9b6b0fe",
       "name": "Code",
       "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "81d0d542-79a8-4823-9d06-f4a168d35715",
+              "name": "Product image",
+              "value": "={{ $json['Product Url'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1408,
+        248
+      ],
+      "id": "700c031e-2af0-4e3b-aec7-527c16e5cca4",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "formTitle": "Enter",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Product Url",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1616,
+        240
+      ],
+      "id": "9ae12ed8-9cb8-4a2e-a453-66c31a28b512",
+      "name": "On form submission",
+      "webhookId": "26a3fa43-0fef-4b3e-a60c-baad3c1b982c"
+    },
+    {
+      "parameters": {
+        "content": "Influncer Imes -\n\n\n\nhttps://i.ibb.co/0p62vcJp/2025-09-14-11-06-40-6288.png"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1120,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "ec2bd9d0-b282-48cd-86d3-845baa89284e",
+      "name": "Sticky Note"
     }
   ],
   "connections": {
@@ -635,43 +694,31 @@
           }
         ]
       ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
-  "pinData": {
-    "Webhook": [
-      {
-        "headers": {
-          "host": "n8n-automation-01.app.n8n.cloud",
-          "user-agent": "axios/1.8.3",
-          "content-length": "44",
-          "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
-          "accept-encoding": "gzip, br",
-          "cdn-loop": "cloudflare; loops=1; subreqs=1",
-          "cf-connecting-ip": "47.90.222.155",
-          "cf-ew-via": "15",
-          "cf-ipcountry": "US",
-          "cf-ray": "980618a331cb056c-IAD",
-          "cf-visitor": "{\"scheme\":\"https\"}",
-          "cf-worker": "n8n.cloud",
-          "content-type": "application/json",
-          "x-forwarded-for": "47.90.222.155, 172.71.190.49",
-          "x-forwarded-host": "n8n-automation-01.app.n8n.cloud",
-          "x-forwarded-port": "443",
-          "x-forwarded-proto": "https",
-          "x-forwarded-server": "traefik-prod-users-gwc-45-5cf4858c8f-dd5k2",
-          "x-is-trusted": "yes",
-          "x-real-ip": "47.90.222.155"
-        },
-        "params": {},
-        "query": {},
-        "body": {
-          "Url": "https://i.ibb.co/s9xfkgvs/file.png"
-        },
-        "webhookUrl": "https://n8n-automation-01.app.n8n.cloud/webhook-test/068e3abe-85d9-4eb5-86c0-2d1316353517",
-        "executionMode": "test"
-      }
-    ]
-  },
+  "pinData": {},
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "f635df4848250cb49c7803c749a960fdbc77f95241c7e4e7e3bc254503e6da17"
