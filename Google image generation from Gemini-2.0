@@ -1,0 +1,180 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ffac390c-8553-4e14-b5c2-211dd0e40676",
+              "leftValue": "={{ $json.candidates[0].content }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "9195c49e-48b9-4a7d-8000-8fd6b2486b45",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "candidates[0].content.parts",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "69e5f93b-96cf-4bc6-8c18-9bec6e676eca",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e940af68-20b0-43a9-8e65-c937b198c1fa",
+              "leftValue": "={{ $json.inlineData }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "f41ef2dc-fac1-42fd-8978-19765ad57800",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "inlineData.data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        0
+      ],
+      "id": "f7f757ad-200b-411f-b979-65c2e3279883",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-preview-image-generation:generateContent",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-goog-api-key",
+              "value": "Free Api"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"compulsary-Use ONLY the face from my provided image as the subject. Do not alter or replace the facial identity. Keep skin tone, facial structure, and unique details exactly the same. If you cannot use my face, do not generate an image.Create a hyper-realistic Instagram-style influencer photo of a confident young woman with an elegant figure in 9:16 ratio. The style should feel like a real lifestyle photo, with mirror selfie with iphone posing that feels natural and aesthetic, with consistent facial features from the reference image. Outfit should be BikiniGenerate a hyper-realistic human photo. The result must look like an authentic camera photograph, not an AI-generated image. Preserve natural proportions, consistent facial details, realistic skin texture, pores, and lighting. Ensure sharp focus, natural depth of field, and correct anatomy with no distortions or extra limbs. Colors, shadows, and reflections should match real-world photography. The final image should be indistinguishable from a real Instagram-style photo taken with a professional camera. If realism cannot be guaranteed, do not generate the image. make sure the Body and face shape should be matches perfectly no marks on full body and leave some space on in his head  \"\n        },\n        {\n          \"inline_data\": {\n            \"mime_type\": \"image/jpeg\",\n            \"data\": \"{{ $json.text }}\"\n          }\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"responseModalities\": [\n      \"TEXT\",\n      \"IMAGE\"\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        224,
+        -80
+      ],
+      "id": "1203e997-a5ff-4117-ac9c-c65c2b4fd3ab",
+      "name": "GEMINI 2.0 IMAGE GENERATION"
+    }
+  ],
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GEMINI 2.0 IMAGE GENERATION": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ca0d0413feef18e7621f4235533fc00a3ea29004d24ba1ec2613bb420c83dfa8"
+  }
+}
